@@ -4,16 +4,15 @@ body {
 }
 
 p {
-    font-size: 20px;
+    font-size: 10px;
     color: red;
-    font-style: italic;
 }
 
 img {
     height: 200px;
     margin: 50px;
     width: 200px;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 h2 {
@@ -22,18 +21,6 @@ h2 {
 
 a {
     margin-right: 30px;
-}
-
-#img_box {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
-
-#ps {
-    font-size: 16px;
-    color: black;
 }
 
 #bottomdiv {
