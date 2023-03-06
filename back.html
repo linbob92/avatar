@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>将canvas作为背景</title>
+</head>
+
+<body style="margin: 0 auto">
+    <canvas id='drawHeart' width="100%" height="100%"
+        style="left: 0px; border:dashed 2px #ccc;position:absolute;z-index:-2;filter: alpha(opacity:50);opacity: 0.5"></canvas>
+    <script>
+        const canvas = document.getElementById('drawHeart');
+        const ctx = canvas.getContext('2d');
+        let wW = window.innerWidth;
+        let wH = window.innerHeight;
+        const num = 100;
+        const hearts = [];
+        const heartImage = new Image();
+        heartImage.src = 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path id="heart" d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z" fill="red"/></svg>';
+
+        class Heart {
+            constructor(type) {
+                this.type = type;
+                // 初始化生成范围
+                this.x = Math.random() * wW;
+                this.y = Math.random() * wH;
+                this.opacity = Math.random() * .5 + .5;
+                // 偏移量
+                this.vel = {
+                    x: (Math.random() - .5) * 5,
+                    y: (Math.random() - .5) * 5
+                }
+                this.initialW = wW * .5;
+                this.initialH = wH * .5;
+                // 缩放比例
+                this.targetScale = Math.random() * .15 + .02; // 最小0.02
+                this.scale = Math.random() * this.targetScale;
+                // 文字位置
+                this.fx = Math.random() * wW;
+                this.fy = Math.random() * wH;
+                this.fs = Math.random() * 10;
+                this.text = getText();
+                this.fvel = {
+                    x: (Math.random() - .5) * 5,
+                    y: (Math.random() - .5) * 5,
+                    f: (Math.random() - .5) * 2
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.drawImage(heartImage, this.x, this.y, this.width, this.height);
+                // ctx.scale(this.scale + 1, this.scale + 1);
+                if (!this.type) {
+                    // 设置文字属性
+                    ctx.fillStyle = getColor();
+                    ctx.font = 'italic ' + this.fs + 'px sans-serif';
+                    // 填充字符串
+                    ctx.fillText(this.text, this.fx, this.fy);
+                }
+                ctx.restore();
+            }
+            update() {
+                this.x += this.vel.x;
+                this.y += this.vel.y;
+                if (this.x - this.width > wW || this.x + this.width < 0) {
+                    // 重新初始化位置
+                    this.scale = 0;
+                    this.x = Math.random() * wW;
+                    this.y = Math.random() * wH;
+                }
+                if (this.y - this.height > wH || this.y + this.height < 0) {
+                    // 重新初始化位置
+                    this.scale = 0;
+                    this.x = Math.random() * wW;
+                    this.y = Math.random() * wH;
+                }
+                // 放大
+                this.scale += (this.targetScale - this.scale) * .1;
+                this.height = this.scale * this.initialH;
+                this.width = this.height * 1.4;
+                // -----文字-----
+                this.fx += this.fvel.x;
+                this.fy += this.fvel.y;
+                this.fs += this.fvel.f;
+                if (this.fs > 50) {
+                    this.fs = 2;
+                }
+                if (this.fx - this.fs > wW || this.fx + this.fs < 0) {
+                    // 重新初始化位置
+                    this.fx = Math.random() * wW;
+                    this.fy = Math.random() * wH;
+                }
+                if (this.fy - this.fs > wH || this.fy + this.fs < 0) {
+                    // 重新初始化位置
+                    this.fx = Math.random() * wW;
+                    this.fy = Math.random() * wH;
+                }
+
+            }
+        }
+
+        function getText() {
+            const val = Math.random() * 10;
+            if (val > 1 && val <= 3) {
+                return 'always';
+            } else if (val > 3 && val <= 5) {
+                return 'zzy';
+            } else if (val > 5 && val <= 8) {
+                return 'taylor swift';
+            } else {
+                return 'I Love You';
+            }
+        }
+
+        function getColor() {
+            const val = Math.random() * 10;
+            if (val > 0 && val <= 1) {
+                return '#00f';
+            } else if (val > 1 && val <= 2) {
+                return '#f00';
+            } else if (val > 2 && val <= 3) {
+                return '#0f0';
+            } else if (val > 3 && val <= 4) {
+                return '#368';
+            } else if (val > 4 && val <= 5) {
+                return '#666';
+            } else if (val > 5 && val <= 6) {
+                return '#333';
+            } else if (val > 6 && val <= 7) {
+                return '#f50';
+            } else if (val > 7 && val <= 8) {
+                return '#e96d5b';
+            } else if (val > 8 && val <= 9) {
+                return '#5be9e9';
+            } else {
+                return '#d41d50';
+            }
+        }
+
+        function init() {
+            canvas.width = wW;
+            canvas.height = wH;
+            for (let i = 0; i < num; i++) {
+                hearts.push(new Heart(i % 5));
+            }
+            render();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, wW, wH);
+            for (let i = 0; i < hearts.length; i++) {
+                hearts[i].draw();
+                hearts[i].update();
+            }
+            setTimeout(render, 60);
+        }
+
+        init();
+        window.addEventListener('resize', function () {
+            canvas.width = wW = window.innerWidth;
+            canvas.height = wH = window.innerHeight;
+        });
+
+
+
+
+    </script>
+    <div id="YST"
+        style="width:600px; height:700px;border:dashed 2px #ccc;text-align: center;left: 500px;position:absolute">
+        <h4>青花瓷</h4>
+        <p align="center">素胚勾勒出青花笔锋浓转淡<br>
+            瓶身描绘的牡丹一如你初妆<br>
+            冉冉檀香透过窗心事我了然<br>
+            宣纸上走笔至此搁一半<br>
+            釉色渲染仕女图韵味被私藏<br>
+            而你嫣然的一笑如含苞待放<br>
+            你的美一缕飘散<br>
+            去到我去不了的地方<br>
+            天青色等烟雨<br>
+            而我在等你<br>
+            炊烟袅袅升起<br>
+            隔江千万里<br>
+            在瓶底书汉隶仿前朝的飘逸<br>
+            就当我为遇见你伏笔<br>
+            天青色等烟雨<br>
+            而我在等你<br>
+            月色被打捞起<br>
+            晕开了结局<br>
+            如传世的青花瓷自顾自美丽<br>
+            你眼带笑意<br>
+            色白花青的锦鲤跃然於碗底<br>
+            临摹宋体落款时却惦记着你<br>
+            你隐藏在窑烧里千年的秘密<br>
+            极细腻犹如绣花针落地<br>
+            帘外芭蕉惹骤雨<br>
+            门环惹铜绿<br>
+            而我路过那江南小镇惹了你<br>
+            在泼墨山水画里<br>
+            你从墨色深处被隐去</p>
+    </div>
+</body>
+
+</html>
