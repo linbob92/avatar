@@ -1,0 +1,17 @@
+body {
+    background-color: pink;
+    display: flex;
+}
+
+
+
+#board {
+    margin: auto;
+    margin-top: 300px;
+    background-color: white;
+    height: 400px;
+    width: 400px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
