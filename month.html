@@ -14,7 +14,7 @@ html, body {
 canvas {
   position: absolute;
   width: 100%;
-  height: 60%;
+  height: 78%;
 }
 div {
     text-align: center;
@@ -35,6 +35,9 @@ h1 {
 <canvas id="name"></canvas>
 
 <canvas id="pinkboard"></canvas>
+<div id="img">
+  <img src="/img/biaobai.jpeg" alt="My test image" />
+</div>
 <script>
 
 /*
@@ -186,7 +189,7 @@ var ParticlePool = (function() {
 
 var canvas = document.getElementById("name");
       var context = canvas.getContext("2d");
-      context.fillStyle = "white";
+      context.fillStyle = "	#ea80b0";
       context.font = "12px Arial";
       context.fillText("唐菲", (canvas.width / 2) - 11, (canvas.height / 2) + 4);
       

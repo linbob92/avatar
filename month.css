@@ -7,3 +7,10 @@ body {
 h1 {
     color: blue;
 }
+
+#img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
